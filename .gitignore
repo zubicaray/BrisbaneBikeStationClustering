@@ -1,0 +1,10 @@
+.settings
+bin
+.cache-main
+.classpath
+.project
+spark-warehouse
+target
+logs
+BACKUP
+clustered_ids

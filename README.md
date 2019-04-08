@@ -38,7 +38,7 @@ The results will be displayed line by line this way:\
 
 ## Backlog
 
-* The two ways coordinates are stored in json have been handled but i did not take care of partial
+* The both coordinates type stored in json have been handled but i did not take care of partial
 data such as station 7:\
 
 {\

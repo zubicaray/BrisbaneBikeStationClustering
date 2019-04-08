@@ -16,10 +16,7 @@ Run 'mvn install' inside downloaded repo so as to make a uber jar.
 To process given json data sample
 you can run this command (cf runSparkJob.sh):
 
-spark-submit --class cluster.Brisbane --master local[*] --name "Brisbane bike station clustering" target/cluster-0.0.1-SNAPSHOT-uber.jar \\
-"Brisbane_CityBike.json" \\
-4 \\
-"clustered_ids" 
+spark-submit --class cluster.Brisbane --master local[*] --name "Brisbane bike station clustering" target/cluster-0.0.1-SNAPSHOT-uber.jar Brisbane_CityBike.json 4 clustered_ids 
 
 Which means:
 run a spark job on local cluster ( --master local[*] ) so as to find 4 cluster indices for bike stations, and write results in clustered_ids folder.

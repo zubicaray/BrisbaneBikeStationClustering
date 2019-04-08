@@ -38,11 +38,11 @@ object Brisbane {
 
   
   //get double value from s2 if s1's missing
-  def getValue(s1:String,s2:String): Double = (s1,s2) match {
-    case (null,null) => 0
-    case (null,s2)   => s2.toDoubleSafe.getOrElse(0)
-    case (s1,_)      => s1.toDoubleSafe.getOrElse(0)
-    case _           => 0
+  def getValue(s1:String,s2:String): Option[Double] = (s1,s2) match {
+    case (null,null) => None
+    case (null,s2)   => s2.toDoubleSafe
+    case (s1,_)      => s1.toDoubleSafe
+    case _           => None
   
   }
   
@@ -65,8 +65,8 @@ object Brisbane {
         getValueUdf($"latitude", $"coordinates.latitude").alias("latitude"),
         getValueUdf($"longitude", $"coordinates.longitude").alias("longitude")
     )
-    
-    val filtered=cleaned.filter("latitude != 0.0 and  longitude != 0.0")
+    // eliminate non correct coordinates
+    val filtered=cleaned.filter("latitude is not null  and  longitude is not null ")
     
     val inputData = filtered.map( row =>   (row.getDouble(0),Vectors.dense(Array(row.getDouble(1),row.getDouble(2)))) ).rdd.cache() 
     
@@ -76,9 +76,10 @@ object Brisbane {
     val directory = new Directory(new File(args(2)))
     directory.deleteRecursively()
     
+    //printing GMM results
     for (i <- 0 until gmm.k) {  println("weight=%f\nmu=%s\nsigma=\n%s\n" format    (gmm.weights(i), gmm.gaussians(i).mu, gmm.gaussians(i).sigma))}
     
-    //printing the results:
+    //writing out clustering results:
     inputData.map{ 
       case ( id,vector) => "%.2f \t %d".format(id, gmm.predict(vector) ) 
     }.saveAsTextFile(args(2))
